@@ -1,0 +1,91 @@
+// export_php:namespace Iandenh\Unleash
+package unleash
+
+// #include <Zend/zend_types.h>
+import "C"
+import (
+	"fmt"
+	"net/http"
+	"sync"
+	"unsafe"
+
+	"github.com/Unleash/unleash-go-sdk/v5"
+	"github.com/Unleash/unleash-go-sdk/v5/context"
+	"github.com/dunglas/frankenphp"
+)
+
+var (
+	loadLock sync.RWMutex
+	client   *unleash.Client
+)
+
+// export_php:function load(): void
+func load() {
+	loadLock.Lock()
+	defer loadLock.Unlock()
+
+	if client != nil {
+		return
+	}
+
+	client, _ = unleash.NewClient(
+		unleash.WithListener(&unleash.DebugListener{}),
+		unleash.WithAppName("my-application"),
+		unleash.WithUrl("http://overleash:8080/api/"),
+		unleash.WithCustomHeaders(http.Header{"Authorization": {"<API token>"}}),
+	)
+
+	client.WaitForReady()
+}
+
+// export_php:function isEnabled(string $featureName, array $context): bool
+func isEnabled(featureFlag *C.zend_string, ctx *C.zend_array) bool {
+	str := frankenphp.GoString(unsafe.Pointer(featureFlag))
+
+	if client == nil {
+		return false
+	}
+
+	array, err := frankenphp.GoMap[any](unsafe.Pointer(ctx))
+
+	if err != nil {
+		return false
+	}
+
+	return client.IsEnabled(str, unleash.WithContext(toContext(array)))
+}
+
+func toContext(input map[string]any) context.Context {
+	// Initialize the context with an empty map for properties
+	ctx := context.Context{
+		Properties: make(map[string]string),
+	}
+
+	for k, v := range input {
+		// 1. Convert the interface value to a string.
+		// We use fmt.Sprint to handle strings, ints, bools, etc. gracefully.
+		strVal := fmt.Sprint(v)
+
+		// 2. Map known keys to struct fields, unknown keys to Properties.
+		// We check for both camelCase (standard JSON) and PascalCase just to be safe.
+		switch k {
+		case "userId", "UserId":
+			ctx.UserId = strVal
+		case "sessionId", "SessionId":
+			ctx.SessionId = strVal
+		case "remoteAddress", "RemoteAddress":
+			ctx.RemoteAddress = strVal
+		case "environment", "Environment":
+			ctx.Environment = strVal
+		case "appName", "AppName":
+			ctx.AppName = strVal
+		case "currentTime", "CurrentTime":
+			ctx.CurrentTime = strVal
+		default:
+			// If it's not a standard field, add it to the custom properties
+			ctx.Properties[k] = strVal
+		}
+	}
+
+	return ctx
+}
