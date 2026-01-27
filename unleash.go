@@ -21,12 +21,11 @@ func init() {
 }
 
 var (
-	loadLock       sync.RWMutex
+	clientLock     sync.RWMutex
 	clientRegistry = make(map[string]*unleash.Client)
 )
 
 func toContext(input map[string]any) context.Context {
-	// Initialize the context with an empty map for properties
 	ctx := context.Context{
 		Properties: make(map[string]string),
 	}
@@ -75,17 +74,17 @@ func go_client_create(
 ) *C.char {
 	name := zendStringToGoString(phpName)
 
-	loadLock.RLock()
+	clientLock.RLock()
 
 	_, ok := clientRegistry[name]
 	if ok {
-		loadLock.RUnlock()
+		clientLock.RUnlock()
 		return nil
 	}
 
-	loadLock.RUnlock()
-	loadLock.Lock()
-	defer loadLock.Unlock()
+	clientLock.RUnlock()
+	clientLock.Lock()
+	defer clientLock.Unlock()
 
 	options := []unleash.ConfigOption{
 		unleash.WithAppName(name),
@@ -141,8 +140,8 @@ func go_client_is_enabled(phpName, phpFeatureFlag *C.zend_string, ctx *C.zend_ar
 	name := zendStringToGoString(phpName)
 	str := zendStringToGoString(phpFeatureFlag)
 
-	loadLock.RLock()
-	defer loadLock.RUnlock()
+	clientLock.RLock()
+	defer clientLock.RUnlock()
 
 	client, ok := clientRegistry[name]
 
@@ -171,8 +170,8 @@ func go_client_is_enabled(phpName, phpFeatureFlag *C.zend_string, ctx *C.zend_ar
 func go_client_close(phpName *C.zend_string) *C.char {
 	name := zendStringToGoString(phpName)
 
-	loadLock.Lock()
-	defer loadLock.Unlock()
+	clientLock.Lock()
+	defer clientLock.Unlock()
 
 	client, ok := clientRegistry[name]
 
