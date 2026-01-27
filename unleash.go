@@ -120,18 +120,15 @@ func go_client_create(
 		return C.CString(err.Error())
 	}
 
-	done := make(chan bool, 1)
-
-	go func() {
-		client.WaitForReady() // Blocks here
-		done <- true
-	}()
-
 	select {
-	case <-done:
+	case <-client.Ready():
 		clientRegistry[name] = client
 
 		return nil
+
+	case err := <-client.Errors():
+		return C.CString(err.Error())
+
 	case <-time.After(5 * time.Second):
 		client.Close()
 
