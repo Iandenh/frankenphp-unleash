@@ -14,7 +14,7 @@ xcaddy build \
     --with github.com/dunglas/caddy-cbrotli \
     --with github.com/dunglas/mercure/caddy \
     --with github.com/dunglas/vulcain/caddy \
-    --with github.com/iandenh/frankenphp-unleash=/unleash
+    --with github.com/iandenh/frankenphp-unleash
 ```
 
 # Usage

@@ -32,6 +32,15 @@ func toContext(input map[string]any) context.Context {
 	}
 
 	for k, v := range input {
+		if k == "properties" {
+			properties, ok := v.(map[string]string)
+
+			if ok {
+				ctx.Properties = properties
+			}
+			continue
+		}
+
 		strVal, ok := v.(string)
 		if !ok {
 			strVal = fmt.Sprint(v)

@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 1102939ccafb1f8a6ffd9e2868755b05a8992e05 */
+ * Stub hash: 10327a407b9aae74d68c83450ef52d1cf1ef9627 */
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_Iandenh_Unleash_Client_getOrCreate, 0, 3, Iandenh\\\125nleash\\Client, 0)
 	ZEND_ARG_TYPE_INFO(0, name, IS_STRING, 0)
@@ -36,7 +36,7 @@ static zend_class_entry *register_class_Iandenh_Unleash_Client(void)
 	zend_class_entry ce, *class_entry;
 
 	INIT_NS_CLASS_ENTRY(ce, "Iandenh\\Unleash", "Client", class_Iandenh_Unleash_Client_methods);
-	class_entry = zend_register_internal_class_with_flags(&ce, NULL, ZEND_ACC_FINAL);
+	class_entry = zend_register_internal_class_with_flags(&ce, NULL, ZEND_ACC_FINAL|ZEND_ACC_NOT_SERIALIZABLE);
 
 	return class_entry;
 }

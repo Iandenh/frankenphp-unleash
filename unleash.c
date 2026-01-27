@@ -18,15 +18,13 @@ typedef struct _unleash_client_object {
     zend_object std;
 } unleash_client_object;
 
-// Helper to get our struct from the zend_object
 static inline unleash_client_object *unleash_client_from_obj(zend_object *obj) {
-    return (unleash_client_object *)((char *)(obj) - XtOffsetOf(unleash_client_object, std));
+    return (unleash_client_object*)((char *)(obj) - XtOffsetOf(unleash_client_object, std));
 }
 
 static void unleash_client_free(zend_object *object) {
     unleash_client_object *intern = unleash_client_from_obj(object);
 
-    // Release the reference to the name string if we hold one
     if (intern->client_name) {
         zend_string_release(intern->client_name);
         intern->client_name = NULL;
@@ -55,10 +53,7 @@ static zend_function *unleash_get_constructor(zend_object *object) {
 }
 
 PHP_MINIT_FUNCTION(unleash) {
-    zend_class_entry ce;
-    INIT_CLASS_ENTRY(ce, "Iandenh\\Unleash\\Client", class_Iandenh_Unleash_Client_methods); // Assuming methods defined in arginfo
-
-    unleash_ce = zend_register_internal_class(&ce);
+    unleash_ce = register_class_Iandenh_Unleash_Client();
     unleash_ce->create_object = unleash_client_create;
 
     memcpy(&unleash_object_handlers, &std_object_handlers, sizeof(zend_object_handlers));
@@ -163,6 +158,6 @@ zend_module_entry unleash_module_entry = {
     NULL, /* RINIT */
     NULL, /* RSHUTDOWN */
     NULL, /* MINFO */
-    "1.0.0", /* Version */
+    "0.1.0", /* Version */
     STANDARD_MODULE_PROPERTIES
 };

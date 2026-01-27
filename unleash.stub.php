@@ -3,6 +3,7 @@
 /** @generate-class-entries */
 
 namespace Iandenh\Unleash {
+    /** @not-serializable */
     final class Client
     {
         public static function getOrCreate(
