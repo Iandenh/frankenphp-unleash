@@ -20,8 +20,10 @@ xcaddy build \
 # Usage
 
 ```php
-// Creating a global unleash client named 'core'. Client will be reused.
-$client = Client::getOrCreate("core", "http://overleash:8080/api", "", streamingMode: true);
+use Iandenh\Unleash\Client;
+
+// Creating a global unleash client named 'api'. Client will be reused.
+$client = Client::getOrCreate("api", "https://unleash.example.com/api", "", streamingMode: true);
 
 // Get enabled status. Second argument is the context.
 $client->isEnabled('feature_name', ['userId' => 123]);
