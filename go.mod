@@ -3,7 +3,7 @@ module github.com/iandenh/frankenphp-unleash
 go 1.25.6
 
 require (
-	github.com/Unleash/unleash-go-sdk/v5 v5.0.4-0.20250901122307-75017c0a9ff2
+	github.com/Unleash/unleash-go-sdk/v6 v6.1.0
 	github.com/dunglas/frankenphp v1.11.1
 )
 

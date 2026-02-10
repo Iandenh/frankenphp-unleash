@@ -11,8 +11,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/Unleash/unleash-go-sdk/v5"
-	"github.com/Unleash/unleash-go-sdk/v5/context"
+	"github.com/Unleash/unleash-go-sdk/v6"
+	"github.com/Unleash/unleash-go-sdk/v6/context"
 	"github.com/dunglas/frankenphp"
 )
 
@@ -26,9 +26,7 @@ var (
 )
 
 func toContext(input map[string]any) context.Context {
-	ctx := context.Context{
-		Properties: make(map[string]string),
-	}
+	ctx := context.Context{}
 
 	for k, v := range input {
 		if k == "properties" {
@@ -59,6 +57,9 @@ func toContext(input map[string]any) context.Context {
 		case "currentTime", "CurrentTime":
 			ctx.CurrentTime = strVal
 		default:
+			if ctx.Properties == nil {
+				ctx.Properties = make(map[string]string)
+			}
 			ctx.Properties[k] = strVal
 		}
 	}
@@ -85,6 +86,10 @@ func go_client_create(
 	clientLock.RUnlock()
 	clientLock.Lock()
 	defer clientLock.Unlock()
+
+	if _, ok := clientRegistry[name]; ok {
+		return nil
+	}
 
 	options := []unleash.ConfigOption{
 		unleash.WithAppName(name),
@@ -149,8 +154,7 @@ func go_client_is_enabled(phpName, phpFeatureFlag *C.zend_string, ctx *C.zend_ar
 		return false, C.CString("client not loaded")
 	}
 
-	var featureOptions []unleash.FeatureOption
-
+	var featureOptions unleash.FeatureOptions
 	if ctx != nil {
 		array, err := frankenphp.GoMap[any](unsafe.Pointer(ctx))
 
@@ -159,11 +163,13 @@ func go_client_is_enabled(phpName, phpFeatureFlag *C.zend_string, ctx *C.zend_ar
 		}
 
 		if len(array) > 0 {
-			featureOptions = append(featureOptions, unleash.WithContext(toContext(array)))
+			featureOptions = unleash.FeatureOptions{
+				Ctx: toContext(array),
+			}
 		}
 	}
 
-	return client.IsEnabled(str, featureOptions...), nil
+	return client.IsEnabled(str, featureOptions), nil
 }
 
 //export go_client_close
