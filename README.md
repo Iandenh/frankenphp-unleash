@@ -17,6 +17,12 @@ xcaddy build \
     --with github.com/iandenh/frankenphp-unleash
 ```
 
+When running tests (or if you don't need file watcher support), add the `nowatcher` build tag to avoid linking the e-dant watcher C library:
+
+```bash
+go test -tags=nowatcher ./...
+```
+
 # Usage
 
 ```php

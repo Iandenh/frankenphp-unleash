@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  go-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Install PHP headers
+        run: sudo apt-get update && sudo apt-get install -y php-dev
+
+      - name: Run tests
+        env:
+          CGO_ENABLED: "1"
+          CGO_CFLAGS: "$(php-config --includes) -D_GNU_SOURCE"
+          CGO_LDFLAGS: "$(php-config --ldflags) $(php-config --libs)"
+        run: go test -tags=nowatcher ./...
