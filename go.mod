@@ -1,10 +1,10 @@
 module github.com/iandenh/frankenphp-unleash
 
-go 1.25.6
+go 1.26.0
 
 require (
 	github.com/Unleash/unleash-go-sdk/v6 v6.1.0
-	github.com/dunglas/frankenphp v1.11.1
+	github.com/dunglas/frankenphp v1.11.2
 )
 
 require (
@@ -15,14 +15,14 @@ require (
 	github.com/bits-and-blooms/bitset v1.24.4 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/dunglas/mercure v0.21.7 // indirect
+	github.com/dunglas/mercure v0.21.8 // indirect
 	github.com/dunglas/skipfilter v1.0.0 // indirect
 	github.com/e-dant/watcher/watcher-go v0.0.0-20260104182512-c28e9078050a // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
 	github.com/gofrs/uuid/v5 v5.4.0 // indirect
-	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/launchdarkly/eventsource v1.11.0 // indirect
@@ -50,10 +50,10 @@ require (
 	go.etcd.io/bbolt v1.4.3 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.47.0 // indirect
-	golang.org/x/net v0.49.0 // indirect
-	golang.org/x/sys v0.40.0 // indirect
-	golang.org/x/text v0.33.0 // indirect
+	golang.org/x/crypto v0.48.0 // indirect
+	golang.org/x/net v0.50.0 // indirect
+	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/text v0.34.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
